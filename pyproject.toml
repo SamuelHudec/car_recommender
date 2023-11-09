@@ -3,26 +3,25 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "new-project-name" # fill this
+name = "car_recommender"
 version = "0.0.0"
 authors = [
-    {name = "dream-team", email = "samuel.hudec@gmail.com"}, # fill this
+    {name = "myself-team", email = "samuel.hudec@gmail.com"},
 ]
-description = "A library for better world" # fill this
+description = "A library for better world"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
-    "torch==1.13.1",
-    "pytorch-lightning==1.9.5",
-    "transformers==4.25.1",
     "pandas==2.*",
     "scikit-learn==1.2.2",
     "numpy==1.23.5",
+    "Flask==2.3.3",
 ]
 
 [project.optional-dependencies]
 dev = [
     "jupyter==1.*",
+    "matplotlib==3.8.1",
     "mypy == 1.2.*",
     "black == 22.*",
     "flake8 == 5.*",
@@ -37,7 +36,7 @@ line-length = 120
 target-version = ['py39']
 
 [tool.isort]
-known_first_party = 'src' # fill this
+known_first_party = 'src'
 py_version = '39'
 profile = 'black'
 multi_line_output = 3
@@ -62,7 +61,7 @@ skip = [
 ]
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.10"
 disallow_untyped_defs = true
 show_error_codes = true
 ignore_missing_imports = true
