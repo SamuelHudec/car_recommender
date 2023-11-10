@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import requests
 
-logger = logging.getLogger("preproces_training_data")
+logger = logging.getLogger("Data_utils")
 
 
 def data_fetcher(path: str) -> pd.DataFrame:
@@ -15,6 +15,7 @@ def data_fetcher(path: str) -> pd.DataFrame:
         return pd.DataFrame(response.json())
     else:
         logger.error("Can not fetch data. Check if path have correct format")
+
 
 def data_dumper(data: pd.DataFrame, path: str):
     if os.path.splitext(path)[1] == ".csv":

@@ -1,34 +1,33 @@
 import logging
 
 import pandas as pd
-from sklearn.neighbors import NearestNeighbors
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
+from sklearn.neighbors import NearestNeighbors
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
+from src.config.data import ID_COLUMN
+from src.config.retriever import (
+    CATEGORICAL_FEATURES,
+    CATEGORICAL_IMPUTER_STRATEGY,
+    DISTANCE_METRIC,
+    N_CANDIDATES,
+    NUMERIC_FEATURES,
+    NUMERIC_IMPUTER_STRATEGY,
+)
 
 logger = logging.getLogger("train_and_retrieve_candidates")
 
-ID_COLUMN = "item_id"
 
-# split features into groups can be done programmatically but I like to have control
-NUMERIC_FEATURES = ['Price', 'Year', 'Kilometer', 'Engine', 'Length', 'Width', 'Height', 'Seating Capacity', 'Fuel Tank Capacity', 'Max Power_left', 'Max Power_right', 'Max Torque_left', 'Max Torque_right']
-CATEGORICAL_FEATURES = ['Make', 'Fuel Type', 'Transmission', 'Color', 'Drivetrain']
-
-NUMERIC_IMPUTER_STRATEGY = "median"
-CATEGORICAL_IMPUTER_STRATEGY = "most_frequent"
-N_CANDIDATES = 30
-DISTANCE_METRIC = "cosine"
-
-
-class RetrieverKNN():
+class RetrieverKNN:
     """
     Class includes train and predict, this can be split into two processes. In case of new products not necessary
     ro run training.
     training, dumping model and predict
     loading model and predict
     """
+
     def __init__(self, train_data: pd.DataFrame) -> None:
         self.train_data = train_data
         self.encoder = self._data_encoder()
@@ -36,15 +35,12 @@ class RetrieverKNN():
 
     def _data_encoder(self) -> ColumnTransformer:
         numeric_transformer = Pipeline(
-            steps=[
-                ("imputer", SimpleImputer(strategy="median")),
-                ("scaler", StandardScaler())
-            ]
+            steps=[("imputer", SimpleImputer(strategy=NUMERIC_IMPUTER_STRATEGY)), ("scaler", StandardScaler())]
         )
 
         categorical_transformer = Pipeline(
             steps=[
-                ("imputer", SimpleImputer(strategy="most_frequent")),
+                ("imputer", SimpleImputer(strategy=CATEGORICAL_IMPUTER_STRATEGY)),
                 ("encoder", OneHotEncoder(handle_unknown="ignore")),
             ]
         )

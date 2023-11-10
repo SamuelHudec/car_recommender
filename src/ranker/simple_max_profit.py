@@ -1,12 +1,14 @@
 import logging
 
 import pandas as pd
+
+from src.config.data import ID_COLUMN
+from src.config.ranker import RANKING_COLUMNS
+
 logger = logging.getLogger("re_rank_candidates")
 
-RANKING_COLUMNS = ["item_id", "reco_id", "re_rank"]
-ID_COLUMN = "item_id"
 
-class SimpleMaxProfit():
+class SimpleMaxProfit:
     def __init__(self, candidates: pd.DataFrame, data: pd.DataFrame) -> None:
         self.candidates = candidates
         self.data = data
@@ -40,9 +42,8 @@ class SimpleMaxProfit():
 
         # fallback is better to recommend notting
         if self.FALL_BACK:
-            # TODO: find a different way how to fall back
+            # TODO: find a elegant way, how to fall back
             df_to_rank["re_rank"] = df_to_rank["reco_rank"]
         logger.info(f"Fallback value {self.FALL_BACK}")
         logger.info(f"Re-ranker DONE")
         return df_to_rank[RANKING_COLUMNS]
-
