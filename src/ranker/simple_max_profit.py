@@ -3,7 +3,8 @@ import logging
 import pandas as pd
 
 from src.config.data import ID_COLUMN
-from src.config.ranker import RANKING_COLUMNS
+from src.config.ranker import N_RECOMMENDATIONS, RANKING_COLUMNS
+from src.config.retriever import N_CANDIDATES
 
 logger = logging.getLogger("re_rank_candidates")
 
@@ -43,7 +44,12 @@ class SimpleMaxProfit:
         # fallback is better to recommend notting
         if self.FALL_BACK:
             # TODO: find a elegant way, how to fall back
-            df_to_rank["re_rank"] = df_to_rank["reco_rank"]
+            df_to_rank["re_rank"] = df_to_rank["reco_rank"] + 1
         logger.info(f"Fallback value {self.FALL_BACK}")
+
+        if isinstance(N_RECOMMENDATIONS, int) & (N_RECOMMENDATIONS < N_CANDIDATES):
+            df_to_rank = df_to_rank.loc[df_to_rank["re_rank"] <= N_RECOMMENDATIONS]
+            logger.info(f"Re-ranker trim recommendation to {N_RECOMMENDATIONS} items.")
+
         logger.info(f"Re-ranker DONE")
         return df_to_rank[RANKING_COLUMNS]
